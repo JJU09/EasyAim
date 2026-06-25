@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* EasyAim — dark "precision" theme (Tailwind v4 @theme) */
+@theme {
+  --color-bg: #0a0b0e;
+  --color-surface: #14161b;
+  --color-surface-2: #1b1e26;
+  --color-border: #272b34;
+  --color-fg: #e7e9ee;
+  --color-muted: #98a1b2;
+  --color-brand: #2ee6a8;
+  --color-brand-dim: #1aa97c;
+  --color-target: #ff5c5c;
+  --color-accent: #38bdf8;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* subtle grid backdrop used on hero/section surfaces */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-border) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 60%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* hide native cursor inside the aim canvas */
+.aim-surface {
+  cursor: none;
+  touch-action: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-brand) 35%, transparent);
+}

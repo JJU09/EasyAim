@@ -17,11 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://easyaim.jjuapp.com"),
   title: {
-    default: "EasyAim — FPS 조준 연습 & 감도 도구",
+    default: "EasyAim — FPS 에임 연습 & 감도 도구",
     template: "%s · EasyAim",
   },
   description:
-    "FPS 입문자를 위한 조준 학습 사이트. 트래킹 가이드와 브라우저 연습, 게임별 감도 변환기를 한 곳에서.",
+    "FPS 입문자를 위한 에임 학습 사이트. 트래킹 가이드와 브라우저 연습, 게임별 감도 변환기를 한 곳에서.",
 };
 
 export default function RootLayout({

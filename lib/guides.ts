@@ -40,13 +40,6 @@ export const GUIDES: GuideMeta[] = [
       "타겟을 지나는 ‘세로선’에 조준선을 붙이는 심상과, 오버에임 없이 좌우를 따라가는 연습 — 라이브 드릴 포함.",
     minutes: 6,
   },
-  {
-    slug: "aim-tips",
-    title: "실전 에임 팁",
-    description:
-      "미러링·안티미러링, 엄폐물 상대법, 히트박스를 활용한 조준 위치 등 실전에서 바로 쓰는 팁.",
-    minutes: 5,
-  },
 ];
 
 export function getGuide(slug: string): GuideMeta | undefined {

@@ -12,10 +12,10 @@ export default function Home() {
         <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-24 text-center sm:py-32">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs text-muted">
             <Crosshair size={14} className="text-brand" />
-            FPS 조준, 기초부터 제대로
+            FPS 에임, 기초부터 제대로
           </span>
           <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
-            조준이 어려운 건
+            에임이 어려운 건
             <br />
             <span className="text-brand">방법을 몰라서</span>입니다
           </h1>

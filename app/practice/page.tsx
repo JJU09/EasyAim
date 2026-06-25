@@ -5,7 +5,7 @@ import { Crosshair } from "@/components/site/Crosshair";
 
 export const metadata: Metadata = {
   title: "연습",
-  description: "브라우저에서 바로 따라 하는 조준 연습 드릴.",
+  description: "브라우저에서 바로 따라 하는 에임 연습 드릴.",
 };
 
 export default function PracticePage() {
@@ -13,7 +13,7 @@ export default function PracticePage() {
     <>
       <PageHeader
         eyebrow="연습"
-        title="조준 연습 드릴"
+        title="에임 연습 드릴"
         description="마우스로 직접 따라 하며 감을 잡으세요. 데스크톱 + 마우스 환경을 권장합니다."
       />
       <section className="mx-auto w-full max-w-6xl px-4 py-12">

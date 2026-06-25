@@ -5,7 +5,7 @@ import { GUIDES } from "@/lib/guides";
 
 export const metadata: Metadata = {
   title: "가이드",
-  description: "FPS 조준의 기초를 입문자 눈높이로 정리한 가이드.",
+  description: "FPS 에임의 기초를 입문자 눈높이로 정리한 가이드.",
 };
 
 export default function GuidePage() {
@@ -13,7 +13,7 @@ export default function GuidePage() {
     <>
       <PageHeader
         eyebrow="가이드"
-        title="조준 가이드"
+        title="에임 가이드"
         description="자세·장비·세팅부터 그립, 손목 사용, 트래킹 심상, 실전 팁까지 — 순서대로 따라 하는 입문 가이드."
       />
       <section className="mx-auto w-full max-w-3xl px-4 py-12">

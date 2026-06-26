@@ -215,10 +215,16 @@ export function TrackingDrill3D() {
           className="aim-surface aspect-video w-full rounded-xl border border-border bg-[#0f1115]"
         />
 
-        {/* fixed centre crosshair */}
+        {/* fixed centre crosshair — turns red on overaim, label is absolutely
+            positioned so it never shifts the crosshair */}
         {status === "running" ? (
-          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <svg width="22" height="22" viewBox="0 0 22 22" className="text-fg">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              className={hud.overaim ? "text-target" : "text-fg"}
+            >
               <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <line x1="1" y1="11" x2="7" y2="11" />
                 <line x1="15" y1="11" x2="21" y2="11" />
@@ -228,7 +234,7 @@ export function TrackingDrill3D() {
               <circle cx="11" cy="11" r="1.4" fill="currentColor" />
             </svg>
             {hud.overaim ? (
-              <span className="mt-2 rounded bg-bg/70 px-1.5 text-xs font-medium text-target">
+              <span className="absolute left-1/2 top-[calc(50%+18px)] -translate-x-1/2 rounded bg-bg/70 px-1.5 text-xs font-medium text-target">
                 오버에임
               </span>
             ) : null}

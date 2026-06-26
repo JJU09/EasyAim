@@ -4,8 +4,7 @@ import {
   cm360FromSens,
   sensFromCm360,
   convertSens,
-  zoomRelativeFromMagnification,
-  zoomRelativeFromFov,
+  overwatchZoomRelative,
 } from "./convert";
 
 const YAW = { cs2: 0.022, valorant: 0.07, overwatch: 0.0066 };
@@ -60,17 +59,26 @@ describe("game-to-game conversion", () => {
   });
 });
 
-describe("Overwatch zoom 1:1 matching", () => {
-  it("relative % from magnification is 100 / mag", () => {
-    expect(zoomRelativeFromMagnification(1)).toBeCloseTo(100, 6);
-    expect(zoomRelativeFromMagnification(2)).toBeCloseTo(50, 6);
+describe("Overwatch zoom 1:1 matching (verified in-game values @ 103 FOV)", () => {
+  it("Widowmaker / Ana (30 VFOV) → 37.89%", () => {
+    expect(overwatchZoomRelative(103, 30)).toBeCloseTo(37.89, 2);
   });
 
-  it("equal FOV → 100% (no scaling)", () => {
-    expect(zoomRelativeFromFov(103, 103)).toBeCloseTo(100, 6);
+  it("Ashe / Cassidy (40 VFOV) → 51.47%", () => {
+    expect(overwatchZoomRelative(103, 40)).toBeCloseTo(51.47, 2);
   });
 
-  it("narrower zoom FOV → lower relative %", () => {
-    expect(zoomRelativeFromFov(103, 50)).toBeLessThan(100);
+  it("Emre (42.5 VFOV) → 54.99%", () => {
+    expect(overwatchZoomRelative(103, 42.5)).toBeCloseTo(54.99, 2);
+  });
+
+  it("Freja (47.5 VFOV) → 62.22%", () => {
+    expect(overwatchZoomRelative(103, 47.5)).toBeCloseTo(62.22, 2);
+  });
+
+  it("lower base FOV → higher relative % (less extra zoom to undo)", () => {
+    expect(overwatchZoomRelative(90, 30)).toBeGreaterThan(
+      overwatchZoomRelative(103, 30)
+    );
   });
 });

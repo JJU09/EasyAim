@@ -1,107 +1,93 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  zoomRelativeFromFov,
-  zoomRelativeFromMagnification,
-  round,
-} from "@/lib/sens/convert";
+import { overwatchZoomRelative, round } from "@/lib/sens/convert";
+import { OW_SCOPES } from "@/lib/sens/games";
 import { NumberField, ResultCard } from "./fields";
 
-type Mode = "mag" | "fov";
-const magPresets = [1, 1.25, 1.5, 2];
+const CUSTOM = "custom";
 
 export function OverwatchZoomMatcher() {
-  const [mode, setMode] = useState<Mode>("mag");
-  const [mag, setMag] = useState(1.5);
   const [baseFov, setBaseFov] = useState(103);
-  const [zoomFov, setZoomFov] = useState(70);
+  const [scopeId, setScopeId] = useState<string>(OW_SCOPES[0].id);
+  const [customVfov, setCustomVfov] = useState(35);
 
-  const relative = useMemo(() => {
-    return mode === "mag"
-      ? zoomRelativeFromMagnification(mag)
-      : zoomRelativeFromFov(baseFov, zoomFov);
-  }, [mode, mag, baseFov, zoomFov]);
+  const isCustom = scopeId === CUSTOM;
+  const vfov = isCustom
+    ? customVfov
+    : (OW_SCOPES.find((s) => s.id === scopeId)?.vfov ?? 30);
+
+  const relative = useMemo(
+    () => overwatchZoomRelative(baseFov, vfov),
+    [baseFov, vfov]
+  );
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
       <div className="flex flex-col gap-4">
-        <div className="flex rounded-lg border border-border bg-surface p-1 text-sm">
-          {(
-            [
-              ["mag", "줌 배율로"],
-              ["fov", "FOV로"],
-            ] as const
-          ).map(([m, label]) => (
+        <NumberField
+          label="기본 시야각 (FOV)"
+          value={baseFov}
+          onChange={setBaseFov}
+          step={1}
+          min={1}
+          suffix="°"
+          hint="오버워치 설정의 시야각 값 (기본 103)."
+        />
+
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-fg">조준경 (영웅)</span>
+          <div className="grid grid-cols-2 gap-2">
+            {OW_SCOPES.map((scope) => (
+              <button
+                key={scope.id}
+                type="button"
+                onClick={() => setScopeId(scope.id)}
+                className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
+                  scopeId === scope.id
+                    ? "border-brand/60 bg-brand/10 text-brand"
+                    : "border-border text-muted hover:text-fg"
+                }`}
+              >
+                <span className="block">{scope.label}</span>
+                <span className="text-xs text-muted">{scope.vfov}° VFOV</span>
+              </button>
+            ))}
             <button
-              key={m}
               type="button"
-              onClick={() => setMode(m)}
-              className={`flex-1 rounded-md px-3 py-2 transition-colors ${
-                mode === m ? "bg-brand text-bg" : "text-muted hover:text-fg"
+              onClick={() => setScopeId(CUSTOM)}
+              className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
+                isCustom
+                  ? "border-brand/60 bg-brand/10 text-brand"
+                  : "border-border text-muted hover:text-fg"
               }`}
             >
-              {label}
+              직접 입력
             </button>
-          ))}
+          </div>
         </div>
 
-        {mode === "mag" ? (
-          <>
-            <NumberField
-              label="조준경 줌 배율"
-              value={mag}
-              onChange={setMag}
-              step={0.05}
-              min={1}
-              suffix="×"
-              hint="조준경이 화면을 몇 배 확대하는지. 대부분의 조준경은 1.3~2.0× 사이입니다."
-            />
-            <div className="flex flex-wrap gap-2">
-              {magPresets.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setMag(p)}
-                  className={`rounded-md border px-3 py-1.5 text-sm transition-colors ${
-                    mag === p
-                      ? "border-brand/60 bg-brand/10 text-brand"
-                      : "border-border text-muted hover:text-fg"
-                  }`}
-                >
-                  {p.toFixed(2)}×
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <NumberField
-              label="기본 FOV"
-              value={baseFov}
-              onChange={setBaseFov}
-              step={1}
-              suffix="°"
-              hint="오버워치 기본 시야각(최대 103)."
-            />
-            <NumberField
-              label="조준경 FOV"
-              value={zoomFov}
-              onChange={setZoomFov}
-              step={1}
-              suffix="°"
-            />
-          </>
-        )}
+        {isCustom ? (
+          <NumberField
+            label="조준경 수직 시야각 (VFOV)"
+            value={customVfov}
+            onChange={setCustomVfov}
+            step={0.5}
+            min={1}
+            suffix="°"
+            hint="조준 시 화면의 세로 시야각."
+          />
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-4">
         <ResultCard
           label="조준 시 상대 감도 (Relative Aim Sensitivity While Zoomed)"
-          value={String(round(relative, 1))}
+          value={String(round(relative, 2))}
           unit="%"
           emphasis
         />
+
         <div className="rounded-xl border border-border bg-surface p-5 text-sm leading-relaxed text-muted">
           <p className="mb-2 font-medium text-fg">설정 위치</p>
           <p>
@@ -109,9 +95,28 @@ export function OverwatchZoomMatcher() {
             <span className="text-fg"> 조준 시 상대 감도</span> 값에 위 숫자를 입력하세요.
           </p>
         </div>
+
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <p className="mb-3 text-sm font-medium text-fg">
+            FOV {round(baseFov, 0)}° 기준 영웅별 값
+          </p>
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {OW_SCOPES.map((scope) => (
+              <li key={scope.id} className="flex justify-between">
+                <span className="text-muted">{scope.label}</span>
+                <span className="font-mono text-fg">
+                  {round(overwatchZoomRelative(baseFov, scope.vfov), 2)}%
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <p className="text-xs leading-relaxed text-muted">
-          이 값은 화면 중앙 기준 1:1(focal length, 0% 모니터 거리) 매칭입니다. 조준경을
-          켜도 타겟이 화면에서 같은 속도로 움직여 “동일한 손맛”을 느끼게 해줍니다.
+          화면 중앙 기준 1:1(focal length) 매칭이라 조준경을 켜도 “동일한 손맛”을 줍니다.
+          오버워치는 수직 시야각을 16:9에 고정하므로 이 값은 <span className="text-fg">16:9
+          이하</span> 해상도에 적용됩니다. 21:9 같은 울트라와이드는 줌이 좌우로 확장돼
+          값이 달라집니다.
         </p>
       </div>
     </div>

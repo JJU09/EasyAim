@@ -46,24 +46,30 @@ export function convertSens(args: {
   return (sens * fromYaw * fromDpi) / (toYaw * toDpi);
 }
 
-/**
- * Overwatch "Relative Aim Sensitivity While Zoomed" (%) that makes the scoped
- * view track 1:1 with hipfire at the centre of the screen — i.e. focal-length
- * / 0% monitor-distance matching. For a scope that magnifies by `magnification`,
- * the answer is simply 100 / magnification.
- */
-export function zoomRelativeFromMagnification(magnification: number): number {
-  return 100 / magnification;
-}
+/** Overwatch anchors vertical FOV to a 16:9 frame. */
+const OW_HEIGHT_FACTOR = 16 / 9;
 
 /**
- * Same 0% monitor-distance match expressed via field-of-view instead of a
- * magnification factor. FOVs are in degrees (horizontal or vertical, as long
- * as both use the same axis).
+ * Overwatch "Relative Aim Sensitivity While Zoomed" (%) for a 1:1 focal-length
+ * match (the scoped view tracks the same on-screen distance as hipfire).
+ *
+ * Overwatch's FOV setting is *horizontal* and its vertical FOV is anchored to a
+ * 16:9 frame, while each scope zooms to a fixed *vertical* FOV. So we compare
+ * the scope's vertical FOV against the vertical FOV derived from the player's
+ * horizontal FOV setting:
+ *
+ *   relative% = 100 · tan(zoomVFov/2) · (16/9) / tan(baseFov/2)
+ *
+ * Valid for 16:9 and narrower aspect ratios (Overwatch keeps vertical FOV
+ * constant there). Verified against in-game values, e.g. 103 FOV →
+ * Widowmaker (30 VFOV) = 37.89%, Ashe (40) = 51.47%, Freja (47.5) = 62.22%.
+ *
+ * @param baseFov  Player's horizontal FOV setting (1–103, default 103).
+ * @param zoomVFov Scope's vertical FOV in degrees.
  */
-export function zoomRelativeFromFov(baseFov: number, zoomFov: number): number {
-  const toHalfRad = (deg: number) => (deg / 2) * (Math.PI / 180);
-  return 100 * (Math.tan(toHalfRad(zoomFov)) / Math.tan(toHalfRad(baseFov)));
+export function overwatchZoomRelative(baseFov: number, zoomVFov: number): number {
+  const halfTan = (deg: number) => Math.tan((deg / 2) * (Math.PI / 180));
+  return (100 * halfTan(zoomVFov) * OW_HEIGHT_FACTOR) / halfTan(baseFov);
 }
 
 /** Round to a sensible number of decimals for display. */

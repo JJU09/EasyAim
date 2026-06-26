@@ -31,3 +31,21 @@ export const GAMES: Game[] = [
 export function getGame(id: string): Game | undefined {
   return GAMES.find((g) => g.id === id);
 }
+
+/**
+ * Overwatch scoped heroes and their fixed zoom *vertical* FOV (degrees),
+ * used by the zoom-sensitivity matcher.
+ */
+export type OwScope = {
+  id: string;
+  label: string;
+  /** Zoom vertical FOV in degrees. */
+  vfov: number;
+};
+
+export const OW_SCOPES: OwScope[] = [
+  { id: "widow-ana", label: "위도우메이커 · 아나", vfov: 30 },
+  { id: "ashe-cassidy", label: "애쉬 · 캐서디", vfov: 40 },
+  { id: "emre", label: "엠레", vfov: 42.5 },
+  { id: "freja", label: "프레야", vfov: 47.5 },
+];

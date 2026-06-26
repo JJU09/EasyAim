@@ -21,18 +21,9 @@ export const DRILL_SKILLS: DrillSkill[] = ["트래킹", "플리킹", "타겟 전
 export const DRILLS: DrillMeta[] = [
   {
     slug: "tracking",
-    title: "트래킹 (2D)",
+    title: "트래킹",
     description:
-      "움직이는 타겟에 크로스헤어를 계속 올려두며 정확도를 측정합니다. 가볍게 시작하기 좋아요.",
-    skill: "트래킹",
-    difficulty: "입문",
-    status: "live",
-  },
-  {
-    slug: "tracking-3d",
-    title: "트래킹 (3D)",
-    description:
-      "3D 공간에서 시야를 돌려 타겟을 추적합니다. 실제 cm/360 감도로, 진짜 FPS 손맛.",
+      "3D 공간에서 시야를 돌려 움직이는 타겟을 추적합니다. 실제 cm/360 감도로, 진짜 FPS 손맛.",
     skill: "트래킹",
     difficulty: "입문",
     status: "live",

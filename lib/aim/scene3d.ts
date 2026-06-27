@@ -4,8 +4,17 @@ import * as THREE from "three";
 export const TARGET_DISTANCE = 16;
 const PITCH_LIMIT = 1.45;
 
+/** Horizontal field of view (degrees), matching a 103 FOV FPS setting. */
+const HORIZONTAL_FOV = 103;
+
 const clamp = (v: number, lo: number, hi: number) =>
   v < lo ? lo : v > hi ? hi : v;
+
+/** three.js cameras use a *vertical* FOV — derive it from the horizontal FOV. */
+function verticalFovDeg(aspect: number): number {
+  const h = (HORIZONTAL_FOV * Math.PI) / 180;
+  return (2 * Math.atan(Math.tan(h / 2) / aspect) * 180) / Math.PI;
+}
 
 /**
  * Shared 3D drill scene: renderer, FPS camera (mouse rotates yaw/pitch), a
@@ -35,7 +44,7 @@ export class AimScene3D {
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(0x0f1115, 18, 46);
 
-    this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(verticalFovDeg(16 / 9), 16 / 9, 0.1, 100);
     this.camera.position.set(0, 0, 0);
 
     this.grid = new THREE.GridHelper(80, 40, 0x2e8f6e, 0x1b1f27);
@@ -65,6 +74,7 @@ export class AimScene3D {
     this.renderer.setPixelRatio(dpr);
     this.renderer.setSize(width, height, false);
     this.camera.aspect = width / height;
+    this.camera.fov = verticalFovDeg(this.camera.aspect);
     this.camera.updateProjectionMatrix();
   }
 

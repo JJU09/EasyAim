@@ -40,6 +40,13 @@ export const GUIDES: GuideMeta[] = [
       "타겟을 지나는 ‘세로선’에 조준선을 붙이는 심상과, 오버에임 없이 좌우를 따라가는 연습 — 라이브 드릴 포함.",
     minutes: 6,
   },
+  {
+    slug: "finger-fine-tuning",
+    title: "손가락 미세조정",
+    description:
+      "앞 4단계로 만든 기본기 위에, 손가락으로 마지막 오차를 잡는 보정 단계. 단순화 → 필요한 근육 → 미세조정의 순서가 핵심입니다.",
+    minutes: 5,
+  },
 ];
 
 export function getGuide(slug: string): GuideMeta | undefined {
